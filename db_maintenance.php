@@ -1,12 +1,12 @@
 <?php 
 /**
- * Plugin Name:       DBCern Page Under Contraction 
+ * Plugin Name:       Dionisis P 
  * Description:       Maintenance Page Plugin
- * Version:           1.0
+ * Version:           1.1
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Dionisis Bolanis
- * Author URI:        https://bolanis.eu/
+ * Author URI:        https://lithosdigital.gr/
  * License:           GPL v2 or later
  */
 
@@ -143,21 +143,21 @@ function dbcern_maintenance_page_template_redirect(){
 
 
 //Remove admin Bar
-function remove_admin_bar() {
+function dbcern_remove_admin_bar() {
     if (!current_user_can('administrator') && !is_admin()) {
         show_admin_bar(false);
     }
 }
-add_action('after_setup_theme', 'remove_admin_bar');
+add_action('after_setup_theme', 'dbcern_remove_admin_bar');
 
 //Remove access to dashboard if not admin
-function wpse23007_redirect(){
+function dbcern_redirect_backend_to_front(){
     if( is_admin() && !defined('DOING_AJAX') && ( current_user_can('subscriber') || current_user_can('contributor') ) ){
         wp_redirect(home_url());
         exit;
     }
 }
-add_action('init','wpse23007_redirect');
+add_action('init','dbcern_redirect_backend_to_front');
 
 
 
@@ -240,3 +240,187 @@ add_action( 'login_head', 'custom_login_logo' );
 */
 
 
+function dbcern_maintenance_admin_page_register() {
+    add_menu_page(
+        'Dionisis Maintenance',   // Page title
+        'Dionisis Maintenance',               // Menu title
+        'manage_options',             // Capability required to access
+        'dbcern-maintenance-admin_page',   // Page slug
+        'dbcern_maintenance_admin_page_display',   // Callback function to display the page content
+        'dashicons-admin-users',      // Icon URL or class
+        1                             // Position in the menu
+    );
+}
+add_action('admin_menu', 'dbcern_maintenance_admin_page_register');
+
+// Callback function to display the content of the backend page
+function dbcern_maintenance_admin_page_display() {
+    ?>
+    <div class="wrap">
+        <h1 style="font-weight:900;">This is a Dionisis Plugin</h1>
+        <br><br>
+        <?php 
+        
+        ?>
+    <div class="custom-registration-form">
+        <?php
+        // Check if the form is submitted
+        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['manualuser'])) {
+            // Retrieve form data
+            $username = sanitize_user($_POST["username"]);
+            $email = sanitize_email($_POST["email"]);
+            $role = sanitize_text_field($_POST["role"]);
+
+            // Validate inputs (you can add more validation as needed)
+
+            // Generate a password
+            $password = wp_generate_password();
+
+            // Create a new user
+            $user_id = wp_create_user($username, $password, $email);
+
+            // Set user role
+            if (!is_wp_error($user_id) && in_array($role, ['subscriber', 'administrator'])) {
+                $user = new WP_User($user_id);
+                $user->set_role($role);
+                // Display the results
+                echo "<p>User created successfully!</p>";
+                echo "<p>Username: $username</p>";
+                echo "<p>Email: $email</p>";
+                echo "<p>Role: $role</p>";
+
+                // Send custom HTML email to the new user
+                $current_site_url = home_url();
+                $subject = 'Login Details for Website: '.$current_site_url;
+                $message = "<br> Welcome to our site.<br><br> Username: $username <br> Password: $password <br> Login Link: <a href='$current_site_url/wp-admin'>Here</a>";
+                $headers = array(
+                    'Content-Type: text/html; charset=UTF-8',
+                );
+                wp_mail($email, $subject, $message,$headers);
+
+            }else{
+                echo 'User Not Created, Email or Username already exist! <br>';
+            }
+
+            
+        }
+
+        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['autolithosusers'])) {
+            $lithos_users = array(
+                'dbolanis' => 'd.bolanis@lithosdigital.gr',
+                'karakw' => 'd.karakwttas@lithosdigital.gr',
+                'Lithos1' => 'a.meksis@lithosdigital.gr',
+                'elpida' => 'elpida@lithosdigital.gr',
+                'LithosSupport' => 'support@lithosdigital.gr',
+                'danai' => 'danai@lithosdigital.com',
+                'giorgos' => 'giorgos@lithosdigital.com',
+                'panagiota' => 'p.xenitidou@lithosdigital.gr',
+            );
+
+            foreach($lithos_users as $username => $email){
+
+                if(isset($_POST[$username]) &&  $_POST[$username] == 'on'){
+                    // Generate a password
+                    $password = wp_generate_password();
+                    $role = 'administrator';
+                    // Create a new user
+                    $user_id = wp_create_user($username, $password, $email);
+
+                    // Set user role
+                    if (!is_wp_error($user_id) && in_array($role, ['subscriber', 'administrator'])) {
+                        $user = new WP_User($user_id);
+                        $user->set_role($role);
+                        // Display the results
+                        echo "<p>User created successfully! ";
+                        echo "Username: $username ";
+                        echo "Email: $email ";
+                        echo " Role: $role</p>";
+
+                        // Send custom HTML email to the new user
+                        $current_site_url = home_url();
+                        $subject = 'Login Details for Website: '.$current_site_url;
+                        $message = "<br> Welcome to our site.<br><br> Username: $username <br> Password: $password <br> Login Link: <a href='$current_site_url/wp-admin'>Here</a>";
+                        $headers = array(
+                            'Content-Type: text/html; charset=UTF-8',
+                        );
+                        wp_mail($email, $subject, $message,$headers);
+
+                    }else{
+                        echo $email.' User Not Created, Email or Username already exist! <br>';
+                    }
+                }
+            }
+        }
+        ?>
+
+        <!-- HTML form -->
+        <form method="post" action="<?php echo esc_url($_SERVER["REQUEST_URI"]); ?>">
+            
+            <input type="hidden" id="manualuser" name="manualuser" >
+            <table style="border:1px solid black;padding:20px;">
+                <tr>
+                    <td><h2>Create Users Manualy</h2></td>
+                    <td></td>
+
+                </tr>
+                <tr>
+                    <td><label for="username">Username:</label></td>
+                    <td><input type="text" id="username" name="username" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email:</label></td>
+                    <td><input type="email" id="email" name="email" required></td>
+                </tr>
+                <tr>
+                    <td><label for="role">Role:</label></td>
+                    <td> 
+                        <select id="role" name="role" required>
+                            <option value="subscriber">Subscriber</option>
+                            <option value="administrator">Administrator</option>
+                        </select>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><input type="submit" value="Submit"></td>
+                    <td></td>
+                </tr>
+            </table>
+        </form>
+
+
+
+        <form method="post" action="<?php echo esc_url($_SERVER["REQUEST_URI"]); ?>">
+            
+            <input type="hidden" id="autolithosusers" name="autolithosusers" >
+            <!--<table style="border:1px solid black;padding:20px;margin-top:30px;">-->
+            <!--    <tr>-->
+            <!--        <td><h2>Create Automatic Users for Lithos</h2></td>-->
+            <!--        <td></td>-->
+
+            <!--    </tr>-->
+            <!--    <tr>-->
+            <!--        <td>-->
+            <!--            <input type="checkbox" name="dbolanis" > Dionisis <br>-->
+            <!--            <input type="checkbox" name="karakw" > Dimitris<br>-->
+            <!--            <input type="checkbox" name="Lithos1" > Andreas<br>-->
+            <!--            <input type="checkbox" name="elpida" > Elpida<br>-->
+            <!--            <input type="checkbox" name="danai" > Danai<br>-->
+            <!--            <input type="checkbox" name="giorgos" > Giorgos<br>-->
+            <!--            <input type="checkbox" name="panagiota" > Panagiwta<br>-->
+            <!--            <input type="checkbox" name="LithosSupport" > Support<br>-->
+            <!--        </td>-->
+            <!--    </tr>-->
+            <!--    <tr>-->
+            <!--        <td><input type="submit" value="Submit"></td>-->
+            <!--        <td></td>-->
+            <!--    </tr>-->
+            <!--</table>-->
+        </form>
+    </div>
+        
+        
+        
+    </div>
+    <?php
+}
