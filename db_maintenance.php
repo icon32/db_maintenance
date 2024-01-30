@@ -242,8 +242,8 @@ add_action( 'login_head', 'custom_login_logo' );
 
 function dbcern_maintenance_admin_page_register() {
     add_menu_page(
-        'Dionisis Maintenance',   // Page title
-        'Dionisis Maintenance',               // Menu title
+        'Lithos Maintenance',   // Page title
+        'Lithos Maintenance',               // Menu title
         'manage_options',             // Capability required to access
         'dbcern-maintenance-admin_page',   // Page slug
         'dbcern_maintenance_admin_page_display',   // Callback function to display the page content
