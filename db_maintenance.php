@@ -82,8 +82,6 @@ function dbcern_maintenance_admin_bar_item( WP_Admin_Bar $wp_admin_bar ) {
                 'title'  => 'Enable',
                 'id'     => 'enable_maintenance',
                 'href'   => '/wp-admin/?maintenance=activate',
-                
-     
             )
         );
     }
@@ -100,11 +98,8 @@ function dbcern_maintenance_option_save(){
             $dbcern_maintenance_options['status'] = $_GET['maintenance'];
             update_option('dbcern_maintenance_mode',$dbcern_maintenance_options);
             // echo $_GET['maintenance'];
-            
         }
-        
     }
-
 }
 //backend
 // add_action( 'admin_footer', 'dbcern_maintenance_option_save' );
