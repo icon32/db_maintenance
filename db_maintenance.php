@@ -1,6 +1,6 @@
 <?php 
 /**
- * Plugin Name:       Dionisis P 
+ * Plugin Name:       LithosDigital Maintenance Page 
  * Description:       Maintenance Page Plugin
  * Version:           1.1
  * Requires at least: 5.2
@@ -225,7 +225,7 @@ function custom_login_logo() {
     <?php
 
 }
-add_action( 'login_head', 'custom_login_logo' );
+// add_action( 'login_head', 'custom_login_logo' );
 
 
 /*
@@ -282,17 +282,18 @@ function dbcern_maintenance_admin_page_display() {
                 echo "<p>User created successfully!</p>";
                 echo "<p>Username: $username</p>";
                 echo "<p>Email: $email</p>";
-                echo "<p>Role: $role</p>";
+                // echo "<p>Role: $role</p>";
+                echo "<p>Password: $password</p>";
+                echo "<p>Link: <a href='$current_site_url/wp-admin'>$current_site_url/wp-admin</a></p>";
 
                 // Send custom HTML email to the new user
-                $current_site_url = home_url();
-                $subject = 'Login Details for Website: '.$current_site_url;
-                $message = "<br> Welcome to our site.<br><br> Username: $username <br> Password: $password <br> Login Link: <a href='$current_site_url/wp-admin'>Here</a>";
-                $headers = array(
-                    'Content-Type: text/html; charset=UTF-8',
-                );
-                wp_mail($email, $subject, $message,$headers);
-
+                // $current_site_url = home_url();
+                // $subject = 'Login Details for Website: '.$current_site_url;
+                // $message = "<br> Welcome to our site.<br><br> Username: $username <br> Password: $password <br> Login Link: <a href='$current_site_url/wp-admin'>Here</a>";
+                // $headers = array(
+                //     'Content-Type: text/html; charset=UTF-8',
+                // );
+                // wp_mail($email, $subject, $message,$headers);
             }else{
                 echo 'User Not Created, Email or Username already exist! <br>';
             }
