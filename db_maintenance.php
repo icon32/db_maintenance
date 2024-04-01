@@ -1,6 +1,6 @@
 <?php 
 /**
- * Plugin Name:       LithosDigital Maintenance Page 
+ * Plugin Name:       Dionisis Bolanis Maintenance Page Plugin 
  * Description:       Maintenance Page Plugin
  * Version:           1.1
  * Requires at least: 5.2
